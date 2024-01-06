@@ -1,17 +1,25 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
 
 # Create your models here.
-class User(TimeStampedModel):
+class User(AbstractUser):
+    username = models.CharField(blank=True, null=True)
+    email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(max_length=30, null=False)
     last_name = models.CharField(max_length=30, null=False)
-    username = models.CharField(max_length=30, null=False)
-    email = models.EmailField(null=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    def __str__(self):
+        return "{}".format(self.email)
 
 
 class Ingredient(TimeStampedModel):
-    name = models.CharField(max_length=30, null=False)
+    name = models.CharField(max_length=30, null=False, unique=True)
 
 
 class Recipe(TimeStampedModel):
