@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: >
+      ./init_web.sh
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_started
+
+  postgres:
+    image: postgres:16.1
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
+    logging:
+      driver: none
+
+  pgadmin:
+    image: dpage/pgadmin4:8.2
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_started
+
+volumes:
+  pgdata:
+  pgadmin_data:
