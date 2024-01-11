@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User
+from .models import User, Recipe, Ingredient, Rating
 
 
 class UserProfileInline(admin.StackedInline):
@@ -28,3 +28,20 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+
+
+class RecipeAdmin(admin.ModelAdmin):
+    pass
+
+
+class IngredientAdmin(admin.ModelAdmin):
+    pass
+
+
+class RatingAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(Rating, RatingAdmin)
