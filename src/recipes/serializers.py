@@ -2,6 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import User, Ingredient, Recipe, Rating
+from .utils import verify_email
 
 
 # Serializer to Get User Details using Django Token Authentication
@@ -48,6 +49,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {"password": "Password fields didn't match."})
+        email_verification_response = verify_email(attrs['email'])
+        if email_verification_response['data']['status'] != "valid":
+            raise serializers.ValidationError(
+                {"email": "Email didn't pass verification."})
         return attrs
 
     def create(self, validated_data):
